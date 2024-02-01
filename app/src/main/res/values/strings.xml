@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Expense Manager</string>
+    <string name="add_income">ADD INCOME</string>
+    <string name="add_expenses">ADD EXPENSES</string>
+    <string name="all_transaction">ALL TRANSACTION</string>
+    <string name="category_1">CATEGORY</string>
+    <string name="reports">REPORTS</string>
+    <string name="type">Type</string>
+    <string name="amount">Amount</string>
+    <string name="category">Category</string>
+    <string name="date">Date</string>
+    <string name="mode">Mode</string>
+    <string name="note">Note</string>
+    <string name="expense_manager">Expense Manager</string>
+</resources>
