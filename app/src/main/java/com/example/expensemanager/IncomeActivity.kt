@@ -1,6 +1,7 @@
 package com.example.expensemanager
 
 import CategoryModel
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -24,10 +25,9 @@ class IncomeActivity : AppCompatActivity() {
     var calendar = Calendar.getInstance()
     lateinit var myDataBaseHalper: MyDataBaseHalper
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_income)
-
         binding = ActivityIncomeBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
@@ -36,16 +36,12 @@ class IncomeActivity : AppCompatActivity() {
     }
 
     private fun initview() {
-
         myDataBaseHalper = MyDataBaseHalper(this, dbName)
         var list = myDataBaseHalper.DisplayRecord()
-
         var categoryAdapter = CategoryAdapter(this, list)
-
         binding.spnCategory.adapter = categoryAdapter
 
         with(binding) {
-
             imgBack.setOnClickListener {
                 onBackPressed()
             }
@@ -65,7 +61,6 @@ class IncomeActivity : AppCompatActivity() {
             }
 
             imgAdd.setOnClickListener {
-
                 var incomeExpenses = data.toString()
                 var amount = edtAmount.text.toString().toInt()
                 var date = txtDate.text.toString()
@@ -76,23 +71,17 @@ class IncomeActivity : AppCompatActivity() {
 
                 if (category is CategoryModel) {
                     myDataBaseHalper.InsertRecord_1(
-                        incomeExpenses,
-                        amount,
-                        category.category,
-                        date,
-                        mode,
-                        note
+                        incomeExpenses, amount, category.category, date, mode, note
                     )
 
                     Toast.makeText(this@IncomeActivity, "submit data", Toast.LENGTH_SHORT).show()
 
-                    Log.d(
-                        "TAG",
-                        "initview: " + incomeExpenses + "  " + amount + "  " + category.category +
-                                "  " + date + "  " + mode + "  " + "  " + note
-                    )
-                    var intent = Intent(this@IncomeActivity, ReportsActivity::class.java)
-                    startActivity(intent)
+                    setResult(Activity.RESULT_OK, Intent().apply {
+                        putExtra("Type", "Income")
+                        putExtra("data", "Expenses")
+                    })
+
+                    finish()
                 }
             }
         }

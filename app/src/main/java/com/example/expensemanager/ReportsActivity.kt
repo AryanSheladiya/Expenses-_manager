@@ -1,8 +1,11 @@
 package com.example.expensemanager
 
-import android.content.Intent
+import android.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.expensemanager.databinding.ActivityReportsBinding
 import dbName
@@ -37,7 +40,38 @@ class ReportsActivity : AppCompatActivity() {
             }
 
 //            RecyclerView
-            reportsAdapter = ReportsAdapter(list)
+            reportsAdapter = ReportsAdapter(list, deleteClick = {id ->
+                Log.d("TAG", "initview: "+id)
+
+                val builder = AlertDialog.Builder(this@ReportsActivity)
+                val inflater = layoutInflater
+                val dialogLayout = inflater.inflate(R.layout.alert_dilog_box, null)
+
+                builder.setView(dialogLayout)
+
+                val dialog = builder.create()
+
+                // Initialize buttons
+                val imgYes = dialogLayout.findViewById<ImageView>(R.id.imgYes)
+                val imgNo = dialogLayout.findViewById<ImageView>(R.id.imgNo)
+
+                imgNo.setOnClickListener {
+                    // Handle Cancel button click
+                    dialog.dismiss()
+                }
+
+                imgYes.setOnClickListener {
+                    // Handle Delete button click
+                    // Put your delete logic here
+
+                    dataBaseHalper.DeleteData(id)
+                    var list = dataBaseHalper.DisplayRecord_1()
+                    reportsAdapter.UpdateData(list)
+                    dialog.dismiss()
+                }
+
+                dialog.show()
+            })
             var manager =
                 LinearLayoutManager(this@ReportsActivity, LinearLayoutManager.VERTICAL, false)
 

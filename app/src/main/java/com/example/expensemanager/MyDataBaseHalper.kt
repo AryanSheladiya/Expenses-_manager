@@ -6,6 +6,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import java.net.IDN
 
 class MyDataBaseHalper(var context: Context, var dbName: String) :
     SQLiteOpenHelper(context, dbName, null, 1) {
@@ -63,22 +64,30 @@ class MyDataBaseHalper(var context: Context, var dbName: String) :
     }
 
     //    IncomeActivity
-    fun InsertRecord_1(incomeExpenses: String,amount: Int,category: String, date: String, mode: String, note: String) {
+    fun InsertRecord_1(
+        incomeExpenses: String,
+        amount: Int,
+        category: String,
+        date: String,
+        mode: String,
+        note: String
+    ) {
 
         var db = writableDatabase
         var b = ContentValues()
 
-        b.put("IncomeExpenses",incomeExpenses)
-        b.put("Amount",amount)
-        b.put("Category",category)
-        b.put("Date",date)
-        b.put("Mode",mode)
-        b.put("Note",note)
+        b.put("IncomeExpenses", incomeExpenses)
+        b.put("Amount", amount)
+        b.put("Category", category)
+        b.put("Date", date)
+        b.put("Mode", mode)
+        b.put("Note", note)
 
-        db.insert("IncomeExpensesTB",null,b)
+        db.insert("IncomeExpensesTB", null, b)
     }
-//    IncomeActivity
-    fun DisplayRecord_1(): ArrayList<IncomeExpenses>{
+
+    //    IncomeActivity
+    fun DisplayRecord_1(): ArrayList<IncomeExpenses> {
 
         var list: ArrayList<IncomeExpenses> = ArrayList()
         var db = readableDatabase
@@ -98,12 +107,56 @@ class MyDataBaseHalper(var context: Context, var dbName: String) :
                 var mode = cursor.getString(5)
                 var note = cursor.getString(6)
 
-                var model_1 = IncomeExpenses(incomeExpensesId,incomeExpenses, amount,category,date,mode,note)
+                var model_1 = IncomeExpenses(
+                    incomeExpensesId,
+                    incomeExpenses,
+                    amount,
+                    category,
+                    date,
+                    mode,
+                    note
+                )
 
                 list.add(model_1)
 
             } while (cursor.moveToNext())
         }
         return list
+    }
+
+    // Calculate total income
+    fun calculateTotalIncome(): Int {
+        var totalIncome = 0
+        val db = readableDatabase
+        val sql = "SELECT SUM(Amount) FROM IncomeExpensesTB WHERE IncomeExpenses = 'Income'"
+        val cursor = db.rawQuery(sql, null)
+
+        if (cursor.moveToFirst()) {
+            totalIncome = cursor.getInt(0)
+        }
+
+        cursor.close()
+        return totalIncome
+    }
+
+    // Calculate total expenses
+    fun calculateTotalExpenses(): Int {
+        var totalExpenses = 0
+        val db = readableDatabase
+        val sql = "SELECT SUM(Amount) FROM IncomeExpensesTB WHERE IncomeExpenses = 'Expenses'"
+        val cursor = db.rawQuery(sql, null)
+
+        if (cursor.moveToFirst()) {
+            totalExpenses = cursor.getInt(0)
+        }
+
+        cursor.close()
+        return totalExpenses
+    }
+
+    //    DeleteData
+    fun DeleteData(id: Int) {
+        var db = writableDatabase
+        db.delete("IncomeExpensesTB", "IncomeExpensesId=?", arrayOf(id.toString()))
     }
 }

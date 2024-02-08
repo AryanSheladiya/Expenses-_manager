@@ -4,12 +4,13 @@ import IncomeExpenses
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 
-class ReportsAdapter(var list: ArrayList<IncomeExpenses>) :
+class ReportsAdapter(var list: ArrayList<IncomeExpenses>, var deleteClick: ((id: Int) -> Unit)) :
     RecyclerView.Adapter<ReportsAdapter.MyViewHolder>() {
     class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
@@ -21,6 +22,8 @@ class ReportsAdapter(var list: ArrayList<IncomeExpenses>) :
         var txtDate: TextView = view.findViewById(R.id.txtDate)
         var txtMode: TextView = view.findViewById(R.id.txtMode)
         var txtNote: TextView = view.findViewById(R.id.txtNote)
+
+        var imgDelete: ImageView = view.findViewById(R.id.imgDelete)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -53,6 +56,16 @@ class ReportsAdapter(var list: ArrayList<IncomeExpenses>) :
             }
 
             linContainer.backgroundTintList = ContextCompat.getColorStateList(context, background)
+
+            imgDelete.setOnClickListener {
+                deleteClick.invoke(list[position].id)
+            }
         }
+    }
+
+    fun UpdateData(list: ArrayList<IncomeExpenses>) {
+        this.list = ArrayList()
+        this.list = list
+        notifyDataSetChanged()
     }
 }

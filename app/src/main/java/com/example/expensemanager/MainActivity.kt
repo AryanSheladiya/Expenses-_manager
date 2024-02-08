@@ -1,11 +1,14 @@
 package com.example.expensemanager
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import com.example.expensemanager.databinding.ActivityMainBinding
-
+import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,10 +26,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initview() {
-        Handler().postDelayed(Runnable { // This method will be executed once the timer is over
+        Handler().postDelayed({
             val i = Intent(this@MainActivity, HomeActivity::class.java)
             startActivity(i)
             finish()
-        }, 1500)
+        }, 1000)
     }
 }
